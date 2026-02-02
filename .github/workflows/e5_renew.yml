@@ -1,0 +1,25 @@
+name: Microsoft 365 E5 Renew
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
+jobs:
+  renew:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run Renew Script
+        env:
+          CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
+          REFRESH_TOKENS: ${{ secrets.REFRESH_TOKEN_1 }},${{ secrets.REFRESH_TOKEN_2 }}
+        run: python main.py
